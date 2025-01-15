@@ -3,69 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма записи на консультацию</title>
+    <title>Оплата и запись на консультацию</title>
     <style>
+        /* Основные стили */
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9f9f9;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(120deg, #004e92, #000428);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             color: #333;
-        }
-        h1 {
             text-align: center;
-            color: #444;
+            display: none;
         }
-        form {
-            max-width: 500px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: relative;
+
+        .qr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
+
+        .qr-container img {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #004e92;
+            margin-bottom: 20px;
+        }
+
         label {
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             display: block;
+            font-size: 1rem;
+            color: #444;
         }
-        input, textarea, button {
+
+        input, button {
             width: 100%;
             padding: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 5px;
+            font-size: 1rem;
         }
+
+        input:focus {
+            outline: none;
+            border-color: #004e92;
+            box-shadow: 0 0 5px rgba(0, 78, 146, 0.5);
+        }
+
         button {
-            background-color: #4CAF50;
-            color: white;
-            font-size: 16px;
+            background: linear-gradient(90deg, #004e92, #000428);
+            color: #ffffff;
+            font-size: 1rem;
             border: none;
             cursor: pointer;
+            transition: background 0.3s ease;
         }
+
         button:hover {
-            background-color: #45a049;
+            background: linear-gradient(90deg, #000428, #004e92);
         }
-        #loader {
+
+        /* Загрузка на весь экран */
+        #fullscreen-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
             display: none;
-            text-align: center;
-            margin-top: 20px;
+            color: #fff;
         }
+
         .loader-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #4CAF50;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #004e92;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
+            margin-bottom: 20px;
         }
+
         .checkmark {
-            display: none;
-            font-size: 50px;
+            font-size: 80px;
             color: #4CAF50;
-            text-align: center;
+            display: none;
+            margin-bottom: 20px;
         }
+
+        .success-text {
+            font-size: 1.5rem;
+            color: #4CAF50;
+            display: none;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -73,58 +136,112 @@
     </style>
 </head>
 <body>
-    <h1>Запись на консультацию</h1>
-    <form id="consultationForm" action="https://docs.google.com/forms/d/e/1FAIpQLSdXXXXXXXXXXXXXXXXXXX/formResponse" method="POST" target="_self" enctype="multipart/form-data">
-        <!-- Поле для имени -->
-        <label for="firstName">Имя:</label>
-        <input type="text" id="firstName" name="entry.1234567890" placeholder="Введите ваше имя" required>
-
-        <!-- Поле для фамилии -->
-        <label for="lastName">Фамилия:</label>
-        <input type="text" id="lastName" name="entry.9876543210" placeholder="Введите вашу фамилию" required>
-
-        <!-- Поле для номера телефона -->
-        <label for="phone">Номер телефона:</label>
-        <input type="tel" id="phone" name="entry.1928374650" placeholder="Введите номер телефона" required>
-
-        <!-- Поле для загрузки чека -->
-        <label for="paymentProof">Чек об оплате:</label>
-        <input type="file" id="paymentProof" name="entry.5678901234" accept="image/*,application/pdf" required>
-
-        <!-- Поле для выбора времени консультации -->
-        <label for="consultationTime">Время консультации:</label>
-        <input type="datetime-local" id="consultationTime" name="entry.2468135790" required>
-
-        <!-- Кнопка отправки -->
-        <button type="submit">Записаться</button>
-    </form>
-
-    <!-- Индикатор загрузки -->
-    <div id="loader">
-        <div class="loader-spinner"></div>
-        <p>Загрузка...</p>
+    <!-- QR-код для оплаты -->
+    <div class="qr-container" id="qrContainer">
+        <h1>Оплата консультации</h1>
+        <p>Отсканируйте QR-код для оплаты:</p>
+        <img src="https://via.placeholder.com/200" alt="QR-код для оплаты">
+        <button id="paidButton">Я оплатил</button>
     </div>
 
-    <!-- Галочка подтверждения -->
-    <div id="checkmark" class="checkmark">✔</div>
+    <!-- Форма записи на консультацию -->
+    <div class="container" id="consultationForm">
+        <h1>Запись на консультацию</h1>
+        <form id="form">
+            <label for="firstName">Имя:</label>
+            <input type="text" id="firstName" name="firstName" placeholder="Введите ваше имя" required>
+
+            <label for="lastName">Фамилия:</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Введите вашу фамилию" required>
+
+            <label for="phone">Номер телефона:</label>
+            <input type="tel" id="phone" name="phone" placeholder="Введите номер телефона" required>
+
+            <label for="consultationTime">Время консультации:</label>
+            <input type="datetime-local" id="consultationTime" name="consultationTime" required>
+
+            <button type="submit">Записаться</button>
+        </form>
+    </div>
+
+    <!-- Загрузка на весь экран -->
+    <div id="fullscreen-loader">
+        <div class="loader-spinner"></div>
+        <div class="checkmark">✔</div>
+        <p class="success-text">Успешно отправлено!</p>
+    </div>
 
     <script>
-        const form = document.getElementById('consultationForm');
-        const loader = document.getElementById('loader');
-        const checkmark = document.getElementById('checkmark');
+        const qrContainer = document.getElementById('qrContainer');
+        const consultationForm = document.getElementById('consultationForm');
+        const paidButton = document.getElementById('paidButton');
+        const form = document.getElementById('form');
+        const loader = document.getElementById('fullscreen-loader');
+        const spinner = document.querySelector('.loader-spinner');
+        const checkmark = document.querySelector('.checkmark');
+        const successText = document.querySelector('.success-text');
 
+        // Показать форму после нажатия кнопки "Я оплатил"
+        paidButton.addEventListener('click', function () {
+            qrContainer.style.display = 'none'; // Скрыть блок с QR-кодом
+            consultationForm.style.display = 'block'; // Показать форму
+        });
+
+        // Отправить данные в Google Таблицы
         form.addEventListener('submit', function (event) {
             event.preventDefault(); // Останавливаем стандартное поведение формы
 
             // Показываем загрузку
-            loader.style.display = 'block';
+            loader.style.display = 'flex';
 
-            // Симулируем отправку формы
-            setTimeout(function () {
-                loader.style.display = 'none'; // Скрываем загрузку
-                checkmark.style.display = 'block'; // Показываем галочку
-            }, 2000); // Таймер в 2 секунды (можно настроить)
+            // Формируем данные для отправки
+            const formData = new FormData(form);
+            const data = {
+                firstName: formData.get('firstName'),
+                lastName: formData.get('lastName'),
+                phone: formData.get('phone'),
+                consultationTime: new Date(formData.get('consultationTime')).toISOString()
+            };
+
+            // Отправка данных в Google Apps Script
+            fetch('https://script.google.com/macros/s/AKfycbwYeNSxh0Xk9fTSeffm0b1A3JK4UahE5iSqvperZWWp3gkbyo9xPWE0foNphUi7u3_9/exec', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Ошибка сервера: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    spinner.style.display = 'none';
+                    checkmark.style.display = 'block';
+                    successText.style.display = 'block';
+                })
+                .catch(error => {
+                    alert(`Произошла ошибка: ${error.message}`);
+                })
+                .finally(() => {
+                    // Убираем загрузчик через 3 секунды
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                        form.reset();
+                        qrContainer.style.display = 'flex';
+                        consultationForm.style.display = 'none';
+                        spinner.style.display = 'block';
+                        checkmark.style.display = 'none';
+                        successText.style.display = 'none';
+                    }, 3000);
+                });
         });
     </script>
 </body>
 </html>
+
