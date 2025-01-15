@@ -22,6 +22,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
         label {
             font-weight: bold;
@@ -45,11 +46,35 @@
         button:hover {
             background-color: #45a049;
         }
+        #loader {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .loader-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        .checkmark {
+            display: none;
+            font-size: 50px;
+            color: #4CAF50;
+            text-align: center;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
     <h1>Запись на консультацию</h1>
-    <form action="https://docs.google.com/forms/d/e/1FAIpQLSdXXXXXXXXXXXXXXXXXXX/formResponse" method="POST" target="_self" enctype="multipart/form-data">
+    <form id="consultationForm" action="https://docs.google.com/forms/d/e/1FAIpQLSdXXXXXXXXXXXXXXXXXXX/formResponse" method="POST" target="_self" enctype="multipart/form-data">
         <!-- Поле для имени -->
         <label for="firstName">Имя:</label>
         <input type="text" id="firstName" name="entry.1234567890" placeholder="Введите ваше имя" required>
@@ -73,5 +98,33 @@
         <!-- Кнопка отправки -->
         <button type="submit">Записаться</button>
     </form>
+
+    <!-- Индикатор загрузки -->
+    <div id="loader">
+        <div class="loader-spinner"></div>
+        <p>Загрузка...</p>
+    </div>
+
+    <!-- Галочка подтверждения -->
+    <div id="checkmark" class="checkmark">✔</div>
+
+    <script>
+        const form = document.getElementById('consultationForm');
+        const loader = document.getElementById('loader');
+        const checkmark = document.getElementById('checkmark');
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Останавливаем стандартное поведение формы
+
+            // Показываем загрузку
+            loader.style.display = 'block';
+
+            // Симулируем отправку формы
+            setTimeout(function () {
+                loader.style.display = 'none'; // Скрываем загрузку
+                checkmark.style.display = 'block'; // Показываем галочку
+            }, 2000); // Таймер в 2 секунды (можно настроить)
+        });
+    </script>
 </body>
 </html>
