@@ -147,7 +147,7 @@
     <!-- Форма записи на консультацию -->
     <div class="container" id="consultationForm">
         <h1>Запись на консультацию</h1>
-        <form id="form">
+        <form action="#" method="POST" enctype="multipart/form-data" id="form">
             <label for="firstName">Имя:</label>
             <input type="text" id="firstName" name="firstName" placeholder="Введите ваше имя" required>
 
@@ -159,6 +159,9 @@
 
             <label for="consultationTime">Время консультации:</label>
             <input type="datetime-local" id="consultationTime" name="consultationTime" required>
+
+            <label for="attachment">Прикрепить файл:</label>
+            <input type="file" id="attachment" name="attachment" required>
 
             <button type="submit">Записаться</button>
         </form>
@@ -187,7 +190,7 @@
             consultationForm.style.display = 'block'; // Показать форму
         });
 
-        // Отправить данные в Google Таблицы
+        // Показать загрузку после нажатия "Записаться"
         form.addEventListener('submit', function (event) {
             event.preventDefault(); // Останавливаем стандартное поведение формы
 
@@ -196,52 +199,28 @@
 
             // Формируем данные для отправки
             const formData = new FormData(form);
-            const data = {
-                firstName: formData.get('firstName'),
-                lastName: formData.get('lastName'),
-                phone: formData.get('phone'),
-                consultationTime: new Date(formData.get('consultationTime')).toISOString()
-            };
 
-            // Отправка данных в Google Apps Script
-            fetch('https://script.google.com/macros/s/AKfycbwYeNSxh0Xk9fTSeffm0b1A3JK4UahE5iSqvperZWWp3gkbyo9xPWE0foNphUi7u3_9/exec', {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+            // Отправляем данные через Fetch API
+            fetch("https:https://script.google.com/macros/s/AKfycby_SSuAUTdz8gR4sa5Xv1pZGOoLiKAZxVKG5V9DUPwOYrlEuKYgWS-02x_8foMb04Y/exec", {
+                method: "POST",
+                body: formData,
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Ошибка сервера: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.error) {
-                        throw new Error(data.error);
-                    }
-                    spinner.style.display = 'none';
-                    checkmark.style.display = 'block';
-                    successText.style.display = 'block';
-                })
-                .catch(error => {
-                    alert(`Произошла ошибка: ${error.message}`);
-                })
-                .finally(() => {
-                    // Убираем загрузчик через 3 секунды
-                    setTimeout(() => {
-                        loader.style.display = 'none';
-                        form.reset();
-                        qrContainer.style.display = 'flex';
-                        consultationForm.style.display = 'none';
-                        spinner.style.display = 'block';
-                        checkmark.style.display = 'none';
-                        successText.style.display = 'none';
-                    }, 3000);
-                });
+            .then(response => {
+                if (response.ok) {
+                    spinner.style.display = 'none'; // Скрываем индикатор загрузки
+                    checkmark.style.display = 'block'; // Показываем галочку
+                    successText.style.display = 'block'; // Показываем сообщение об успехе
+                } else {
+                    alert('Произошла ошибка при отправке формы. Пожалуйста, попробуйте еще раз.');
+                }
+            })
+            .catch(error => {
+                alert('Произошла ошибка: ' + error.message);
+            })
+            .finally(() => {
+                setTimeout(() => loader.style.display = 'none', 3000);
+            });
         });
     </script>
 </body>
 </html>
-
